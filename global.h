@@ -16,7 +16,11 @@ private:
 	int *pData;
 };
 
-inline FQInfo::FQInfo( int key ) : nKey( key ), pData( new int[2] ){}
+inline FQInfo::FQInfo( int key ) : nKey( key ), pData( new int[2] )
+{
+	pData[0] = 21;
+	pData[1] = 37;
+}
 
 inline FQInfo::~FQInfo()
 {

@@ -1,19 +1,29 @@
 #include "FQueue.h"
 
-
+// Constructor
 FQueue::FQueue()
 {
 	m_pHead = nullptr;
 	m_pTail = nullptr;
 }
 
+// Destructor
 FQueue::~FQueue()
 {
 	FQClear();
 }
-FifoItem::FifoItem(FQInfo *pItem) : m_pItem(pItem), m_pNext(nullptr) {}
 
-FifoItem::~FifoItem() {}
+// Constructor for FifoItem
+FifoItem::FifoItem(FQInfo *pItem)
+{
+	m_pItem = pItem;
+	m_pNext = nullptr;
+}
+
+// Destructor for FifoItem
+FifoItem::~FifoItem(){}
+
+// Check if the queue is empty
 bool FQueue::FQEmpty() const
 {
 	return m_pHead == nullptr;
@@ -28,16 +38,19 @@ int FQueue::FQEnqueue( FQInfo *pInfo )
 	}
 	if( FQEmpty())
 	{
+		// If the queue is empty, set both head and tail to the new item
 		m_pHead = m_pTail = pItem;
 	}
 	else
 	{
+		// Add the new item to the end of the queue and update the tail
 		m_pTail->m_pNext = pItem;
 		m_pTail = pItem;
 	}
-	return 0;
+	return 0; // Enqueue operation successful
 }
 
+// Dequeue an item from the front of the queue
 FQInfo *FQueue::FQDequeue()
 {
 	if( FQEmpty())
@@ -46,11 +59,12 @@ FQInfo *FQueue::FQDequeue()
 	}
 	FifoItem *pItem = m_pHead;
 	m_pHead = m_pHead->m_pNext;
-	FQInfo *pInfo = pItem->m_pItem;
+	FQInfo *pInfo = new FQInfo(*pItem->m_pItem);
 	delete pItem;
-	return pInfo;
+	return pInfo; // Return the dequeued item
 }
 
+// Clear the entire queue
 void FQueue::FQClear()
 {
 	while( !FQEmpty())
@@ -59,6 +73,7 @@ void FQueue::FQClear()
 	}
 }
 
+// Delete the front item of the queue
 void FQueue::FQDel()
 {
 	if( FQEmpty())

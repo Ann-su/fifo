@@ -2,31 +2,12 @@
 
 #include <iostream>
 #include <stdexcept>
+#include "global.h"
 using namespace std;
 
 #define FIFO_ALLOCATION_ERROR 0x01
 #define FIFO_QUEUE_EMPTY 0x04
 #define OTHER_ERROR 0x10
-
-// Structure for FQInfo
-struct FQInfo
-{
-	int nKey;
-	int *pData;
-
-	FQInfo( int key ) : nKey( key ), pData( new int[2] ){}
-
-	~FQInfo()
-	{
-		delete[] pData;
-	}
-
-	friend ostream &operator<<( ostream &os, const FQInfo &info )
-	{
-		os << "Key: " << info.nKey << ", Data: [" << info.pData[0] << ", " << info.pData[1] << "]";
-		return os;
-	}
-};
 
 // Item class for the FIFO
 class FifoItem
