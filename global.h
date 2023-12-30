@@ -5,16 +5,17 @@
 
 using namespace std;
 
-class FQInfo
+struct FQInfo
 {
-public:
-	FQInfo( int key );
-	virtual ~FQInfo();
-	friend ostream &operator<<( ostream &os, const FQInfo &info );
-private:
 	int nKey;
-	int *pData;
+	int* pData;
+
+	FQInfo(int key = 0);
+	~FQInfo();
+
+	friend ostream& operator<<( ostream& out, const FQInfo& info);
 };
+
 
 inline FQInfo::FQInfo( int key ) : nKey( key ), pData( new int[2] )
 {

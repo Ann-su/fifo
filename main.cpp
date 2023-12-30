@@ -27,53 +27,51 @@ int main()
 #ifdef USE_TEMPLATE_FQUEUE
 void TemplateTest()
 {
-	printf("---FIFO-INT-------------------------------------------------------------------\n");
+	printf("---INT-------------------------------------------------------------------\n");
 
-	FQueue<int> tlista1;
+	FQueue<int> queue_1;
 	FQInfo<int> t1(5);
 	FQInfo<int> t2(9);
 	FQInfo<int> t3(18);
-	tlista1.FQEnqueue(&t1);
-	tlista1.FQEnqueue(&t2);
-	tlista1.FQEnqueue(&t3);
-	while (!tlista1.FQEmpty())
+	queue_1.FQEnqueue( &t1);
+	queue_1.FQEnqueue( &t2);
+	queue_1.FQEnqueue( &t3);
+	while (!queue_1.FQEmpty())
 	{
-		FQInfo<int> *pItem = tlista1.FQDequeue();
+		FQInfo<int> *pItem = queue_1.FQDequeue();
 		cout << *pItem << endl;
 	}
-	printf("---FIFO-DOUBLE-------------------------------------------------------------------\n");
+	printf("---DOUBLE-------------------------------------------------------------------\n");
 
-	FQueue<double> tlista2;
+	FQueue<double> queue_2;
 	FQInfo<double> t4(5.13);
 	cout << "t4 = " << t4 << endl;
 	FQInfo<double> t5(9.2);
 	FQInfo<double> t6(18.009);
-	tlista2.FQEnqueue(&t4);
-	tlista2.FQEnqueue(&t5);
-	tlista2.FQEnqueue(&t6);
-	while (!tlista2.FQEmpty())
+	queue_2.FQEnqueue( &t4);
+	queue_2.FQEnqueue( &t5);
+	queue_2.FQEnqueue( &t6);
+	while (!queue_2.FQEmpty())
 	{
-		FQInfo<double> *pItem = tlista2.FQDequeue();
+		FQInfo<double> *pItem = queue_2.FQDequeue();
 		cout << *pItem << endl;
 	}
 
 
-	printf("---FIFO-CONST CHAR*-------------------------------------------------------------------\n");
+	printf("---CONST CHAR*-------------------------------------------------------------------\n");
 
-	FQueue<const char*> tlista3;
-	FQInfo<const char*> t7("aa");
-	FQInfo<const char*> t8("bb");
-	FQInfo<const char*> t9("ambitnie");
-	tlista3.FQEnqueue(&t7);
-	tlista3.FQEnqueue(&t8);
-	tlista3.FQEnqueue(&t9);
-	while (!tlista3.FQEmpty())
+	FQueue<const char*> queue_3;
+	FQInfo<const char*> t7("let");
+	FQInfo<const char*> t8("me");
+	FQInfo<const char*> t9("out of here");
+	queue_3.FQEnqueue( &t7);
+	queue_3.FQEnqueue( &t8);
+	queue_3.FQEnqueue( &t9);
+	while (!queue_3.FQEmpty())
 	{
-		FQInfo<const char*> *pItem = tlista3.FQDequeue();
+		FQInfo<const char*> *pItem = queue_3.FQDequeue();
 		cout << *pItem << endl;
 	}
-
-
 }
 #endif
 
