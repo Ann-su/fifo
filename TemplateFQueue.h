@@ -1,5 +1,3 @@
-// TemplateFQueue.h
-
 #pragma once
 
 #include <iostream>
@@ -10,91 +8,93 @@ using namespace std;
 #define FIFO_QUEUE_EMPTY 0x04
 #define OTHER_ERROR 0x10
 
-//==Templatki===========================================================================================================
-
-template<class K>
-struct FQInfo
-{
-	K nKey;
-	int *pData;
-	FQInfo( K key = K());
-	~FQInfo();
-
-	friend ostream &operator<<( ostream &out, const FQInfo &info )
-	{
-		out << "Key: " << info.nKey << ", Data: [" << info.pData[0] << ", " << info.pData[1] << "]";
-		return out;
-	}
-};
-
-template<class K>
+template<class T>
 class FQueue;
 
-template<class K>
+template<class T>
 class FifoItem
 {
-	friend class FQueue<K>;
+	friend class FQueue<T>;
 
 public:
-	FifoItem( FQInfo<K> *pItem = nullptr );
-	~FifoItem();
+	FifoItem( T itemData );
+	virtual ~FifoItem();
 private:
-	FQInfo<K> *m_pItem;
-	FifoItem<K> *m_pNext;
+	T mData;
+	FifoItem<T> *m_pNext;
 };
 
-template<class K>
+template<class T>
 class FifoException : public exception
 {
 public:
 	FifoException( int errCode = OTHER_ERROR ) : errorCode( errCode )
-	{};
+	{}
+
 	const char *getReason() const;
 private:
 	int errorCode;
 };
 
-template<class K>
+template<class T>
 class FQueue
 {
 public:
 	FQueue();
 	virtual ~FQueue();
 	bool FQEmpty() const;
-	int FQEnqueue( FQInfo<K> *pInfo );
-	FQInfo<K> *FQDequeue();
+	int FQEnqueue( T info );
+	T FQDequeue();
 	void FQClear();
+	void Print() const;
 private:
-	FifoItem<K> *m_pHead;
-	FifoItem<K> *m_pTail;
+	FifoItem<T> *m_pHead;
+	FifoItem<T> *m_pTail;
 	void FQDel();
 };
 
 //==IMPLEMENTATIONS=====================================================================================================
 
-template<class K>
-FQueue<K>::FQueue()
-{
-	m_pHead = nullptr;
-	m_pTail = nullptr;
-}
+template<class T>
+FifoItem<T>::FifoItem( T itemData ) : mData( itemData ), m_pNext( nullptr )
+{}
 
-template<class K>
-FQueue<K>::~FQueue()
+template<class T>
+FifoItem<T>::~FifoItem()
+{}
+
+template<class T>
+FQueue<T>::FQueue() : m_pHead( nullptr ), m_pTail( nullptr )
+{}
+
+template<class T>
+FQueue<T>::~FQueue()
 {
 	FQClear();
 }
 
-template<class K>
-bool FQueue<K>::FQEmpty() const
+template<class T>
+bool FQueue<T>::FQEmpty() const
 {
 	return m_pHead == nullptr;
 }
 
-template<class K>
-int FQueue<K>::FQEnqueue( FQInfo<K> *pInfo )
+template<class T>
+void FQueue<T>::Print() const
 {
-	FifoItem<K> *pItem = new( nothrow ) FifoItem<K>( pInfo );
+	FifoItem<T> *pItem = m_pHead;
+	cout << "Queue contents: " << endl;
+	while( pItem )
+	{
+		cout << "Data: " << pItem->mData << endl;
+		pItem = pItem->m_pNext;
+	}
+}
+
+template<class T>
+int FQueue<T>::FQEnqueue( T info )
+{
+	FifoItem<T> *pItem = new( nothrow ) FifoItem<T>( info );
 	if( !pItem )
 	{
 		return FIFO_ALLOCATION_ERROR;
@@ -111,8 +111,43 @@ int FQueue<K>::FQEnqueue( FQInfo<K> *pInfo )
 	return 0;
 }
 
-template<class K>
-const char *FifoException<K>::getReason() const
+template<class T>
+T FQueue<T>::FQDequeue()
+{
+	if( FQEmpty())
+	{
+		throw FifoException<T>( FIFO_QUEUE_EMPTY );
+	}
+	FifoItem<T> *pItem = m_pHead;
+	m_pHead = m_pHead->m_pNext;
+	T data = pItem->mData;
+	delete pItem;
+	return data;
+}
+
+template<class T>
+void FQueue<T>::FQClear()
+{
+	while( !FQEmpty())
+	{
+		FQDel();
+	}
+}
+
+template<class T>
+void FQueue<T>::FQDel()
+{
+	if( FQEmpty())
+	{
+		return;
+	}
+	FifoItem<T> *pItem = m_pHead;
+	m_pHead = m_pHead->m_pNext;
+	delete pItem;
+}
+
+template<class T>
+const char *FifoException<T>::getReason() const
 {
 	switch( errorCode )
 	{
@@ -122,68 +157,3 @@ const char *FifoException<K>::getReason() const
 		default: return "Other error";
 	}
 }
-
-template<class K>
-FQInfo<K> *FQueue<K>::FQDequeue()
-{
-	if( FQEmpty())
-	{
-		throw FifoException<K>( FIFO_QUEUE_EMPTY );
-	}
-	FifoItem<K> *pItem = m_pHead;
-	m_pHead = m_pHead->m_pNext;
-	FQInfo<K> *pInfo = pItem->m_pItem;
-	delete pItem;
-	return pInfo;
-}
-
-template<class K>
-void FQueue<K>::FQClear()
-{
-	while( !FQEmpty())
-	{
-		FQDel();
-	}
-}
-
-template<class K>
-void FQueue<K>::FQDel()
-{
-	if( FQEmpty())
-	{
-		return;
-	}
-	FifoItem<K> *pItem = m_pHead;
-	m_pHead = m_pHead->m_pNext;
-	delete pItem;
-}
-
-template<class K>
-FQInfo<K>::FQInfo( K key ) : nKey( key ), pData( new int[2] )
-{
-	pData[0] = 21;
-	pData[1] = 37;
-}
-
-template<class K>
-FQInfo<K>::~FQInfo()
-{
-	delete[] pData;
-}
-
-template<class K>
-ostream &operator<<( ostream &out, const FQInfo<K> &info )
-{
-	out << "Key: " << info.nKey << ", Data: [" << info.pData[0] << ", " << info.pData[1] << "]";
-	return out;
-}
-
-template<class K>
-FifoItem<K>::FifoItem( FQInfo<K> *pItem )
-{
-	m_pItem = pItem;
-	m_pNext = nullptr;
-}
-
-template<class K>
-FifoItem<K>::~FifoItem(){}

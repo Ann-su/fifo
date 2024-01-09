@@ -47,7 +47,7 @@ int FQueue::FQEnqueue( FQInfo *pInfo )
 		m_pTail->m_pNext = pItem;
 		m_pTail = pItem;
 	}
-	return 0; // Enqueue operation successful
+	return 0;
 }
 
 // Dequeue an item from the front of the queue
