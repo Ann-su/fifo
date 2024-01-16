@@ -49,23 +49,27 @@ public:
 	void Print() const;
 private:
 	FifoItem<T> *m_pHead;
-	FifoItem<T> *m_pTail;
 	void FQDel();
 };
 
 //==IMPLEMENTATIONS=====================================================================================================
 
 template<class T>
-FifoItem<T>::FifoItem( T itemData ) : mData( itemData ), m_pNext( nullptr )
-{}
+FifoItem<T>::FifoItem( T itemData )
+{
+	mData = itemData;
+	m_pNext = nullptr;
+}
 
 template<class T>
 FifoItem<T>::~FifoItem()
 {}
 
 template<class T>
-FQueue<T>::FQueue() : m_pHead( nullptr ), m_pTail( nullptr )
-{}
+FQueue<T>::FQueue()
+{
+	m_pHead = nullptr;
+}
 
 template<class T>
 FQueue<T>::~FQueue()
@@ -99,14 +103,23 @@ int FQueue<T>::FQEnqueue( T info )
 	{
 		return FIFO_ALLOCATION_ERROR;
 	}
+
+	// Add the new item to the end of the queue
 	if( FQEmpty())
 	{
-		m_pHead = m_pTail = pItem;
+		m_pHead = pItem;
 	}
 	else
 	{
-		m_pTail->m_pNext = pItem;
-		m_pTail = pItem;
+		// Traverse to the end of the queue
+		FifoItem<T> *pLast = m_pHead;
+		while( pLast->m_pNext != nullptr )
+		{
+			pLast = pLast->m_pNext;
+		}
+
+		// Add the new item to the end
+		pLast->m_pNext = pItem;
 	}
 	return 0;
 }
