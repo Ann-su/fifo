@@ -29,25 +29,15 @@ bool FQueue::FQEmpty() const
 	return m_pHead == nullptr;
 }
 
-int FQueue::FQEnqueue( FQInfo *pInfo )
+int FQueue::FQEnqueue(FQInfo* pInfo)
 {
-	FifoItem *pItem = new( nothrow ) FifoItem( pInfo );
-	if( !pItem )
+	FifoItem* pItem = new (nothrow) FifoItem(pInfo);
+	if (!pItem)
 	{
-		return FIFO_ALLOCATION_ERROR;
+		throw FifoException(FIFO_ALLOCATION_ERROR);
 	}
-	if( FQEmpty())
-	{
-		// If the queue is empty, set both head and tail to the new item
-		m_pHead = m_pTail = pItem;
-	}
-	else
-	{
-		// Add the new item to the end of the queue and update the tail
-		m_pTail->m_pNext = pItem;
-		m_pTail = pItem;
-	}
-	return 0;
+
+	return m_pTail ? (m_pTail = m_pTail->m_pNext = pItem, 0) : (m_pTail = m_pHead = pItem, 0);
 }
 
 // Dequeue an item from the front of the queue

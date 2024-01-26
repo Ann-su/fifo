@@ -29,29 +29,29 @@ void TemplateTest()
 {
 	printf("---int--------------------------------------------------------------------\n");
 
-	FQueue<int> lista1;
-	lista1.FQEnqueue(2);
-	lista1.FQEnqueue(1);
-	lista1.FQEnqueue(3);
-	lista1.Print();
+	FQueue<int> fifo1;
+	fifo1.FQEnqueue( 2);
+	fifo1.FQEnqueue( 1);
+	fifo1.FQEnqueue( 3);
+	fifo1.Print();
 	cout << endl;
 
 	printf("---double--------------------------------------------------------------------\n");
 
-	FQueue<double> lista2;
-	lista2.FQEnqueue(7.21);
-	lista2.FQEnqueue(8888.2);
-	lista2.FQEnqueue(420.69);
-	lista2.Print();
+	FQueue<double> fifo2;
+	fifo2.FQEnqueue( 7.21);
+	fifo2.FQEnqueue( 8888.2);
+	fifo2.FQEnqueue( 420.69);
+	fifo2.Print();
 	cout << endl;
 
 	printf("---Tablica czarow--------------------------------------------------------------------\n");
 
-	FQueue<const char *> lista3;
-	lista3.FQEnqueue("Let");
-	lista3.FQEnqueue("me");
-	lista3.FQEnqueue("out");
-	lista3.Print();
+	FQueue<const char *> fifo3;
+	fifo3.FQEnqueue( "Let");
+	fifo3.FQEnqueue( "me");
+	fifo3.FQEnqueue( "out");
+	fifo3.Print();
 	cout << endl;
 
 }
@@ -60,32 +60,24 @@ void TemplateTest()
 #ifdef USE_FQUEUE
 void QueueTest()
 {
+	FQueue fifo;
+	FQInfo* pItem = new FQInfo( 1  );
+	fifo.FQEnqueue( pItem );
+	cout << "Added: " << *pItem << endl;
+	pItem = new FQInfo( 2);
+	fifo.FQEnqueue( pItem );
+	cout << "Added: " << *pItem << endl;
+	pItem = new FQInfo( 3 );
+	fifo.FQEnqueue( pItem );
+	cout << "Added: " << *pItem << endl;
 
-    FQueue fifo;
-    FQInfo item1(1);
-    FQInfo item2(2);
-    FQInfo item3(3);
-    fifo.FQEnqueue( &item1);
-    fifo.FQEnqueue( &item2);
-    fifo.FQEnqueue( &item3);
-
-    cout << "Queue before dequeue:" << endl;
-    while (!fifo.FQEmpty())
-    {
-        FQInfo *pItem = fifo.FQDequeue();
-        cout << *pItem << endl;
-    }
-
-    FQInfo item4(4);
-    FQInfo item5(5);
-    fifo.FQEnqueue( &item4);
-    fifo.FQEnqueue( &item5);
-
-    cout << "\nQueue after enqueue:" << endl;
-    while (!fifo.FQEmpty())
-    {
-        FQInfo *pItem = fifo.FQDequeue();
-        cout << *pItem << endl;
-    }
+	pItem = fifo.FQDequeue();
+	cout << "Removed " << *pItem << endl;
+	delete pItem;
+	pItem = fifo.FQDequeue();
+	cout << "Removed " << *pItem << endl;
+	delete pItem;
+	pItem = fifo.FQDequeue();
+	cout << "Removed " << *pItem << endl;
 }
 #endif

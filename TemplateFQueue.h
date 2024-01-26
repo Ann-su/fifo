@@ -99,16 +99,7 @@ int FQueue<T>::FQEnqueue( T info )
 	{
 		return FIFO_ALLOCATION_ERROR;
 	}
-	if( FQEmpty())
-	{
-		m_pHead = m_pTail = pItem;
-	}
-	else
-	{
-		m_pTail->m_pNext = pItem;
-		m_pTail = pItem;
-	}
-	return 0;
+	return m_pTail ? (m_pTail = m_pTail->m_pNext = pItem, 0) : (m_pTail = m_pHead = pItem, 0);
 }
 
 template<class T>
